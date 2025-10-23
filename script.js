@@ -95,10 +95,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // If validation passes (for demo purposes)
-            formMessage.textContent = 'Message sent! (Demo only)';
-            formMessage.style.color = '#6ec1e4'; // Success color
-            contactForm.reset(); // Clear the form
+            // Send email using EmailJS
+            formMessage.textContent = 'Sending...';
+            formMessage.style.color = '#6ec1e4';
+
+            emailjs.send('service_1ejiuqb', 'template_wlya5xa', {
+                from_name: name,
+                from_email: email,
+                message: message,
+                to_email: 'ufarunagidosky@gmail.com'
+            })
+            .then(function(response) {
+                formMessage.textContent = 'Message sent successfully!';
+                formMessage.style.color = '#6ec1e4';
+                contactForm.reset();
+            }, function(error) {
+                formMessage.textContent = 'Failed to send message. Please try again later.';
+                formMessage.style.color = '#e57373';
+            });
         });
     }
 
