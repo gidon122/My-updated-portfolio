@@ -193,16 +193,24 @@
         </footer>
 
         <!-- EmailJS CDN and initialization -->
-     <script type="text/javascript" type="module"
-        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
-<script type="text/javascript" defer>
-   (function(){
-      emailjs.init({
-        publicKey: "XkJeXE1qcwJTENIXL",
-      });
-   })();
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
+    <script defer>
+        (function(){
+            if (typeof emailjs !== 'undefined' && emailjs && typeof emailjs.init === 'function') {
+                // initialize with public key (string)
+                try { emailjs.init("XkJeXE1qcwJTENIXL"); } catch(e) { console.warn('EmailJS init failed', e); }
+            } else {
+                // If the library didn't load yet, wait for window load then init
+                window.addEventListener('load', function(){
+                    if (window.emailjs && typeof window.emailjs.init === 'function') {
+                        try { window.emailjs.init("XkJeXE1qcwJTENIXL"); } catch(e) { console.warn('EmailJS init failed on load', e); }
+                    } else {
+                        console.warn('EmailJS library not available. Contact form will not send.');
+                    }
+                });
+            }
+        })();
+    </script>
         <script src="script.js"></script>
 </body>
 </html>

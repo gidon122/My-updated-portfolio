@@ -151,18 +151,30 @@ document.addEventListener('DOMContentLoaded', () => {
             formMessage.textContent = 'Sending...';
             formMessage.style.color = '#6ec1e4';
 
+            if (typeof emailjs === 'undefined' || !emailjs || typeof emailjs.send !== 'function') {
+                console.error('EmailJS library not loaded or `emailjs.send` unavailable.');
+                formMessage.textContent = 'Email service unavailable. Please try again later.';
+                formMessage.style.color = '#e57373';
+                return;
+            }
+
+            // Add debug info to console for troubleshooting
+            console.log('Sending email via EmailJS', { service: 'service_1ejiuqb', template: 'template_wlya5xa', from_name: name, from_email: email });
+
             emailjs.send('service_1ejiuqb', 'template_wlya5xa', {
                 from_name: name,
                 from_email: email,
                 message: message,
                 to_email: 'ufarunagidosky@gmail.com'
-            })
-            .then(function(response) {
+            }).then(function(response) {
+                console.log('EmailJS response:', response);
                 formMessage.textContent = 'Message sent successfully!';
                 formMessage.style.color = '#6ec1e4';
                 contactForm.reset();
-            }, function(error) {
-                formMessage.textContent = 'Failed to send message. Please try again later.';
+            }).catch(function(error) {
+                console.error('EmailJS error:', error);
+                // Try to provide a more helpful error message
+                formMessage.textContent = 'Failed to send message. Check console for details.';
                 formMessage.style.color = '#e57373';
             });
         });
